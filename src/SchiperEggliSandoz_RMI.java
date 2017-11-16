@@ -1,4 +1,6 @@
+import java.rmi.Remote;
 
-public class SchiperEggliSandoz_RMI {
+
+public interface SchiperEggliSandoz_RMI extends Remote{
 
 }
