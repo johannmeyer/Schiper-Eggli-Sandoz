@@ -1,3 +1,6 @@
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
@@ -30,6 +33,14 @@ public class SchiperEggliSandoz extends UnicastRemoteObject implements SchiperEg
     	} else {
     	    messageBuffer.add(m);
     	}
+    }
+    
+    public void send(int destinationID, String destination, String message) throws MalformedURLException, RemoteException, NotBoundException {
+        SchiperEggliSandoz_RMI dest = (SchiperEggliSandoz_RMI) Naming.lookup(destination);
+        timeStamp[pid] = timeStamp[pid]++;
+        Message messageObject = new Message(message, sBuffer, timeStamp);
+        dest.receive(messageObject);
+        SBuffer.insert(sBuffer, new S(destinationID, timeStamp));
     }
     
     /**
