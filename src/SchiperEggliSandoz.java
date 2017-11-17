@@ -1,8 +1,53 @@
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.LinkedList;
+import java.util.List;
 
-public class SchiperEggliSandoz implements SchiperEggliSandoz_RMI{
+public class SchiperEggliSandoz extends UnicastRemoteObject implements SchiperEggliSandoz_RMI{
+    
+    private List<Message> messageBuffer;
+    private SBuffer S;
+    private int[] timeStamp;
+    private int pid;
+    
+    public SchiperEggliSandoz(int pid, int numProcesses) throws RemoteException {
+        super();
+        messageBuffer = new LinkedList<Message>();
+        S = new SBuffer(numProcesses);
+        timeStamp = new int[numProcesses];
+        this.pid = pid;
+    }
 
-    public void receive(String m, SBuffer s, int[] v)
+    /**
+     * Receives a messages. If deliver requirement is met, message is delivered.
+     * Otherwise, it is added to the buffer.
+     */
+    public void receive(Message m)
     {
-    	// Perform Receive
+    	if (SBuffer.compare(m.getsBuffer(), S) < 1) { //Update accordingly with SBuffer class
+    	    deliver(m);
+    	    checkBuffer();
+    	} else {
+    	    messageBuffer.add(m);
+    	}
+    }
+    
+    /**
+     * Checks the buffer for messages that can be delivered.
+     */
+    private void checkBuffer() {
+        for(int i = 0; i < messageBuffer.size(); i++) {
+            Message m = messageBuffer.get(i);
+            if (SBuffer.compare(m.getsBuffer(), S) < 1) { //Update accordingly with SBuffer class
+                deliver(m);
+                messageBuffer.remove(i);
+                checkBuffer();
+                break;
+            }
+        }
+    }
+    
+    private void deliver(Message m) {
+        //Merge local buffer with buffer in m
     }
 }
