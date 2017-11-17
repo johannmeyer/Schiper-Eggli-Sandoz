@@ -6,7 +6,20 @@ public class VectorClock {
 		
 		for (int i = 0; i < timeStamp1.length; i++)
 		{
-			if (timeStamp1[i] > timeStamp2[i])
+			if (!(timeStamp1[i] < timeStamp2[i]))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public static boolean lessThanEqualTo(int[] timeStamp1, int[] timeStamp2)
+	{	
+		
+		for (int i = 0; i < timeStamp1.length; i++)
+		{
+			if (!(timeStamp1[i] <= timeStamp2[i]))
 			{
 				return false;
 			}

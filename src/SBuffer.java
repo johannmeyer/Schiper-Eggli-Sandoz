@@ -34,7 +34,7 @@ public class SBuffer {
 		{
 			if (bufferElementMesg.getPid() == currProcess.getPid())
 			{
-				return VectorClock.strictlyLessThan(bufferElementMesg.getTimeStamp(),
+				return VectorClock.lessThanEqualTo(bufferElementMesg.getTimeStamp(),
 									currProcess.getTimeStamp());
 			}
 		}
