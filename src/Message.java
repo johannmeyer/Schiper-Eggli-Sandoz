@@ -1,11 +1,13 @@
+import java.util.List;
+
 
 public class Message {
 
     private String message;
-    private SBuffer sBuffer;
+    private List<S> sBuffer;
     private int[] timeStamp;
     
-    public Message(String message, SBuffer sBuffer, int[] timeStamp) {
+    public Message(String message, List<S> sBuffer, int[] timeStamp) {
         this.message = message;
         this.sBuffer = sBuffer;
         this.timeStamp = timeStamp;
@@ -19,11 +21,11 @@ public class Message {
         this.message = message;
     }
 
-    public SBuffer getsBuffer() {
+    public List<S> getsBuffer() {
         return sBuffer;
     }
 
-    public void setsBuffer(SBuffer sBuffer) {
+    public void setsBuffer(List<S> sBuffer) {
         this.sBuffer = sBuffer;
     }
 

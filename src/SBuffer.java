@@ -1,3 +1,4 @@
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -43,4 +44,27 @@ public class SBuffer {
 		return true;
 	}
 
+	public static List<S> merge(List<S> ownBuffer, List<S> incomingBuffer) {
+	    List<S> resultBuffer = new LinkedList<S>();
+	    
+       for(int i = 0; i < incomingBuffer.size(); i++) {
+           boolean found = false;
+           S incomingS = incomingBuffer.get(i);
+           
+           for(int j = 0; j < ownBuffer.size(); i++) {
+               S ownS = ownBuffer.get(i);
+               if(incomingS.getPid() == ownS.getPid()) {
+                   found = true;
+                   int[] maxTimeStamp = VectorClock.max(incomingS.getTimeStamp(), ownS.getTimeStamp());
+                   resultBuffer.add(new S(ownS.getPid(), maxTimeStamp));
+               }
+           }
+           
+           if(!found) {
+               resultBuffer.add(incomingBuffer.get(i));
+           }
+       }
+       
+       return resultBuffer;
+	}
 }

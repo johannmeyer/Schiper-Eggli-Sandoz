@@ -6,14 +6,14 @@ import java.util.List;
 public class SchiperEggliSandoz extends UnicastRemoteObject implements SchiperEggliSandoz_RMI{
     
     private List<Message> messageBuffer;
-    private SBuffer S;
+    private List<S> sBuffer;
     private int[] timeStamp;
     private int pid;
     
     public SchiperEggliSandoz(int pid, int numProcesses) throws RemoteException {
         super();
         messageBuffer = new LinkedList<Message>();
-        S = new SBuffer(numProcesses);
+        sBuffer = new LinkedList<S>();
         timeStamp = new int[numProcesses];
         this.pid = pid;
     }
@@ -24,7 +24,7 @@ public class SchiperEggliSandoz extends UnicastRemoteObject implements SchiperEg
      */
     public void receive(Message m)
     {
-    	if (SBuffer.compare(m.getsBuffer(), S) < 1) { //Update accordingly with SBuffer class
+    	if (SBuffer.deliveryCondition(m.getsBuffer(), new S(pid, timeStamp))) {
     	    deliver(m);
     	    checkBuffer();
     	} else {
@@ -38,7 +38,7 @@ public class SchiperEggliSandoz extends UnicastRemoteObject implements SchiperEg
     private void checkBuffer() {
         for(int i = 0; i < messageBuffer.size(); i++) {
             Message m = messageBuffer.get(i);
-            if (SBuffer.compare(m.getsBuffer(), S) < 1) { //Update accordingly with SBuffer class
+            if (SBuffer.deliveryCondition(m.getsBuffer(), new S(pid, timeStamp))) {
                 deliver(m);
                 messageBuffer.remove(i);
                 checkBuffer();
@@ -48,6 +48,6 @@ public class SchiperEggliSandoz extends UnicastRemoteObject implements SchiperEg
     }
     
     private void deliver(Message m) {
-        //Merge local buffer with buffer in m
+        sBuffer = SBuffer.merge(sBuffer, m.getsBuffer());
     }
 }
