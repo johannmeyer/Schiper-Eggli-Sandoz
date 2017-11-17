@@ -2,12 +2,12 @@
 public class Message {
 
     private String message;
-    private SBuffer S;
+    private SBuffer sBuffer;
     private int[] timeStamp;
     
-    public Message(String message, SBuffer S, int[] timeStamp) {
+    public Message(String message, SBuffer sBuffer, int[] timeStamp) {
         this.message = message;
-        this.S = S;
+        this.sBuffer = sBuffer;
         this.timeStamp = timeStamp;
     }
 
@@ -19,12 +19,12 @@ public class Message {
         this.message = message;
     }
 
-    public SBuffer getS() {
-        return S;
+    public SBuffer getsBuffer() {
+        return sBuffer;
     }
 
-    public void setS(SBuffer s) {
-        S = s;
+    public void setsBuffer(SBuffer sBuffer) {
+        this.sBuffer = sBuffer;
     }
 
     public int[] getTimeStamp() {
