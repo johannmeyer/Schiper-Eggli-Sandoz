@@ -1,5 +1,8 @@
 
 public class SchiperEggliSandoz implements SchiperEggliSandoz_RMI{
 
-//	receive()
+    public void receive(String m, SBuffer s, int[] v)
+    {
+    	// Perform Receive
+    }
 }
