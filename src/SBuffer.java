@@ -1,33 +1,46 @@
+import java.util.List;
+
 
 public class SBuffer {
-	int pid;
-	int[] timeStamp;
-	
-	public SBuffer(int numProcesses)
-	{
-		timeStamp = new int[numProcesses];		
-	}
-	
-	public int[] getTimeStamp()
-	{
-		return timeStamp;
-	}
-	
-	public int getPid()
-	{
-		return pid;
-	}
 
-	public void insert(int pid, int[] timeStamp)
+	public static void insert(List<S> sBuffer, S newS)
 	{
-		//TODO add insertion algorithm
+		boolean flag = false;
+		
+		// If pid is in list update its timestamp
+		for (S bufferElement : sBuffer)
+		{
+			if(bufferElement.getPid() == newS.getPid())
+			{
+				bufferElement.setTimeStamp(newS.getTimeStamp());
+				flag = true;
+				break;
+			}
+		}
+		
+		// If pid not found in list add it to the list
+		if (!flag)
+		{
+			sBuffer.add(newS);
+		}
+		
 	}
 	
-	public static int compare(SBuffer s1, SBuffer s2)
+	public static boolean deliveryCondition(List<S> sBufferMesg, S currProcess)
 	{
-		// Vector comparison
-//		for (int i = 0; i < s1.length)
-		return 0;
+		
+		// There exists an (i,V) in Sm and V <= Vi
+		for (S bufferElementMesg : sBufferMesg)
+		{
+			if (bufferElementMesg.getPid() == currProcess.getPid())
+			{
+				return VectorClock.strictlyLessThan(bufferElementMesg.getTimeStamp(),
+									currProcess.getTimeStamp());
+			}
+		}
+		
+		// The message contains no knowledge of what should have been received
+		return true;
 	}
 
 }
