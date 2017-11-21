@@ -1,8 +1,9 @@
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 
-public class SBuffer {
+public class SBuffer{
 
 	public static void insert(List<S> sBuffer, S newS)
 	{
@@ -66,5 +67,10 @@ public class SBuffer {
        }
        
        return resultBuffer;
+	}
+	
+	public static String toString(List<S> sBuffer)
+	{
+		return Arrays.toString(sBuffer.toArray());
 	}
 }
