@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 
 public class VectorClock {
 
@@ -36,5 +38,11 @@ public class VectorClock {
 				max_array[i] = timeStamp2[i];
 		}
 		return max_array;
+	}
+	
+	public static String toString(int[] vectorClock)
+	{
+		return Arrays.toString(vectorClock);
+		
 	}
 }

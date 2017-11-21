@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public class S {
+public class S implements Serializable{
 
 	int pid;
 	int[] timeStamp;
@@ -28,5 +29,10 @@ public class S {
 	public void setTimeStamp(int[] timeStamp)
 	{
 		this.timeStamp = timeStamp;
+	}
+	
+	public String toString()
+	{
+		return "(" + pid + ", " + VectorClock.toString(timeStamp) + ")";
 	}
 }
