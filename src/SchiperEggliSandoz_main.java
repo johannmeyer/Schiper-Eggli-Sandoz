@@ -31,8 +31,7 @@ public class SchiperEggliSandoz_main {
 			for (int i = 0; i < numProcesses; i++)
 			{
 				myThreads[i].start();
-				Thread.sleep(1000);
-				
+//				Thread.sleep(3000);
 			}
 			
 		} catch (Exception e) {
@@ -61,6 +60,8 @@ class MyProcess implements Runnable
 		{
 			try
 			{
+			    if(process.pid == 2)
+			        Thread.sleep(1000);
 				process.send(destIDs[i], "SchiperEggliSandoz", messages[i]);
 			}
 			catch (Exception e) {

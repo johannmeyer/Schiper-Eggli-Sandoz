@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,14 +47,18 @@ public class SBuffer{
 	}
 
 	public static List<S> merge(List<S> ownBuffer, List<S> incomingBuffer) {
-	    List<S> resultBuffer = new LinkedList<S>();
+	    if(incomingBuffer.isEmpty()) {
+	        return ownBuffer;
+	    }
+	    
+	    List<S> resultBuffer = new ArrayList<S>();
 	    
        for(int i = 0; i < incomingBuffer.size(); i++) {
            boolean found = false;
            S incomingS = incomingBuffer.get(i);
            
-           for(int j = 0; j < ownBuffer.size(); i++) {
-               S ownS = ownBuffer.get(i);
+           for(int j = 0; j < ownBuffer.size(); j++) {
+               S ownS = ownBuffer.get(j);
                if(incomingS.getPid() == ownS.getPid()) {
                    found = true;
                    int[] maxTimeStamp = VectorClock.max(incomingS.getTimeStamp(), ownS.getTimeStamp());

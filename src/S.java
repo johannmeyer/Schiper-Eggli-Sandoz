@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class S implements Serializable{
 
@@ -9,6 +10,13 @@ public class S implements Serializable{
 	{
 		this.pid = pid;
 		this.timeStamp = timeStamp;
+	}
+	
+	public S clone()
+	{
+	    S newS = new S(this.pid, Arrays.copyOf(this.timeStamp, this.timeStamp.length));
+	    
+	    return newS;
 	}
 	
 	public int[] getTimeStamp()
