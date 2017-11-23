@@ -22,10 +22,11 @@ public class SchiperEggliSandoz_main {
 
 			int[][] destIDs = {{1,2}, {}, {1}};
 			String[][] messages = {{"1", "2"}, {}, {"3"}};
+			int[][] delays = {{5000, 0}, {}, {500}};
 			for (int i = 0; i < numProcesses; i++)
 			{
 				SchiperEggliSandoz process = new SchiperEggliSandoz(i, numProcesses);
-				MyProcess p = new MyProcess(process, destIDs[i], messages[i]);
+				MyProcess p = new MyProcess(process, destIDs[i], messages[i], delays[i]);
 				myThreads[i] = new Thread(p);
 			}
 			for (int i = 0; i < numProcesses; i++)
@@ -48,10 +49,12 @@ class MyProcess implements Runnable
 	int[] destIDs;
 	String[] messages;
 	SchiperEggliSandoz process;
-	public MyProcess(SchiperEggliSandoz process, int[] destIDs, String[] messages) {
+	int[] delays;
+	public MyProcess(SchiperEggliSandoz process, int[] destIDs, String[] messages, int[] delays) {
 		this.messages = messages;
 		this.destIDs = destIDs;
 		this.process = process;
+		this.delays = delays;
 	}
 
 	public void run() {
@@ -62,7 +65,7 @@ class MyProcess implements Runnable
 			{
 			    if(process.pid == 2)
 			        Thread.sleep(1000);
-				process.send(destIDs[i], "SchiperEggliSandoz", messages[i]);
+				process.send(destIDs[i], "SchiperEggliSandoz", messages[i], delays[i]);
 			}
 			catch (Exception e) {
 				System.err.println("Client exception: " + e.toString()); 

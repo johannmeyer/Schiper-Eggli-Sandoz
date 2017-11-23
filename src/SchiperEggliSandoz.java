@@ -58,23 +58,17 @@ public class SchiperEggliSandoz extends UnicastRemoteObject implements SchiperEg
     public synchronized void send(int destinationID, String destination, String message) throws MalformedURLException, RemoteException, NotBoundException {
 
         SchiperEggliSandoz_RMI dest = (SchiperEggliSandoz_RMI) Naming.lookup(destination + "-" + destinationID);
-        // Make a copy for inserting into the SBuffer
-        // int[] oldTimeStamp = Arrays.copyOf(timeStamp, timeStamp.length);
 
-        // New operation
         timeStamp[pid]++;
         List<S> copy = new ArrayList<S>();
         for(S element : sBuffer) {
             copy.add(element.clone());
         }
-//        Collections.copy(copy, sBuffer);
         
         Message messageObject = new Message(message, copy, Arrays.copyOf(timeStamp, timeStamp.length));
 
         println("Sending - " + messageObject.toString());
-//        int wait = (int) (Math.random()*10000);
-        int[] wait= {10000/(pid+1), 0};
-        println(""+wait[timeStamp[pid]-1]);
+        int wait = (int) (Math.random()*10000);
 
         new java.util.Timer().schedule( 
                 new java.util.TimerTask() {
@@ -87,10 +81,44 @@ public class SchiperEggliSandoz extends UnicastRemoteObject implements SchiperEg
                         }
                     }
                 },
-                wait[timeStamp[pid]-1]
+                wait
         );
         
         
+//        println("send sBuffer before: " + SBuffer.toString(sBuffer));
+        SBuffer.insert(sBuffer, new S(destinationID, Arrays.copyOf(timeStamp, timeStamp.length)));
+//        println("send sBuffer after: " + SBuffer.toString(sBuffer));
+    }
+    
+    public synchronized void send(int destinationID, String destination, String message, int delay) throws MalformedURLException, RemoteException, NotBoundException {
+
+        SchiperEggliSandoz_RMI dest = (SchiperEggliSandoz_RMI) Naming.lookup(destination + "-" + destinationID);
+
+        // New operation
+        timeStamp[pid]++;
+        List<S> copy = new ArrayList<S>();
+        for(S element : sBuffer) {
+            copy.add(element.clone());
+        }
+        
+        Message messageObject = new Message(message, copy, Arrays.copyOf(timeStamp, timeStamp.length));
+
+        println("Sending - " + messageObject.toString());
+
+        new java.util.Timer().schedule( 
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            dest.receive(messageObject);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                delay
+        );
+               
 //        println("send sBuffer before: " + SBuffer.toString(sBuffer));
         SBuffer.insert(sBuffer, new S(destinationID, Arrays.copyOf(timeStamp, timeStamp.length)));
 //        println("send sBuffer after: " + SBuffer.toString(sBuffer));
