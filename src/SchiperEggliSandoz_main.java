@@ -10,19 +10,16 @@ public class SchiperEggliSandoz_main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// args[0] = numProcesses		
-	
-//		int numProcesses = Integer.parseInt(args[0]);
 		int numProcesses = 3;
 		Thread[] myThreads = new Thread[numProcesses];
 		try{
 			// Create Registry
 			Registry registry = LocateRegistry.createRegistry(1099);
 
-
 			int[][] destIDs = {{1,2}, {}, {1}};
 			String[][] messages = {{"1", "2"}, {}, {"3"}};
 			int[][] delays = {{5000, 0}, {}, {500}};
+
 			for (int i = 0; i < numProcesses; i++)
 			{
 				SchiperEggliSandoz process = new SchiperEggliSandoz(i, numProcesses);
@@ -32,7 +29,6 @@ public class SchiperEggliSandoz_main {
 			for (int i = 0; i < numProcesses; i++)
 			{
 				myThreads[i].start();
-//				Thread.sleep(3000);
 			}
 			
 		} catch (Exception e) {
@@ -58,7 +54,6 @@ class MyProcess implements Runnable
 	}
 
 	public void run() {
-		// TODO Auto-generated method stub
 		for (int i = 0; i < destIDs.length; i++)
 		{
 			try

@@ -16,7 +16,7 @@ public class SchiperEggliSandoz extends UnicastRemoteObject implements SchiperEg
     private List<Message> messageBuffer;
     private List<S> sBuffer;
     private int[] timeStamp;
-    public int pid; //TODO make private and use getter
+    public int pid;
 
     public SchiperEggliSandoz(int pid, int numProcesses) throws RemoteException {
         super();
@@ -30,8 +30,6 @@ public class SchiperEggliSandoz extends UnicastRemoteObject implements SchiperEg
         	Registry registry = LocateRegistry.getRegistry();
 
         	registry.rebind("SchiperEggliSandoz-" + pid, this);
-//        	for(String str : registry.list())
-//        		System.err.println(str);
         	System.err.println("Process " + pid + " ready");
         } catch (Exception e) {
         	System.err.println("Server exception: " + e.toString());
@@ -84,10 +82,7 @@ public class SchiperEggliSandoz extends UnicastRemoteObject implements SchiperEg
                 wait
         );
         
-        
-//        println("send sBuffer before: " + SBuffer.toString(sBuffer));
         SBuffer.insert(sBuffer, new S(destinationID, Arrays.copyOf(timeStamp, timeStamp.length)));
-//        println("send sBuffer after: " + SBuffer.toString(sBuffer));
     }
     
     public synchronized void send(int destinationID, String destination, String message, int delay) throws MalformedURLException, RemoteException, NotBoundException {
@@ -119,16 +114,13 @@ public class SchiperEggliSandoz extends UnicastRemoteObject implements SchiperEg
                 delay
         );
                
-//        println("send sBuffer before: " + SBuffer.toString(sBuffer));
         SBuffer.insert(sBuffer, new S(destinationID, Arrays.copyOf(timeStamp, timeStamp.length)));
-//        println("send sBuffer after: " + SBuffer.toString(sBuffer));
     }
 
     /**
      * Checks the buffer for messages that can be delivered.
      */
     private synchronized void checkBuffer() {
-    	//println("Checking buffer");
         for(int i = 0; i < messageBuffer.size(); i++) {
             Message m = messageBuffer.get(i);
             if (SBuffer.deliveryCondition(m.getsBuffer(), new S(pid, timeStamp))) {
@@ -144,13 +136,11 @@ public class SchiperEggliSandoz extends UnicastRemoteObject implements SchiperEg
     	// Update knowledge of what should have occurred
         sBuffer = SBuffer.merge(sBuffer, m.getsBuffer());
         println("Delivering - " + m.toString());
-//        println("Old Timestamp: " + VectorClock.toString(this.timeStamp));
         // Merge Vector Clocks
         this.timeStamp = VectorClock.max(this.timeStamp, m.getTimeStamp());
 
         // Increment clock for current process
         this.timeStamp[pid]++;
-//        println("New Timestamp: " + VectorClock.toString(this.timeStamp));
     }
 
     private void println(String message)
